@@ -44,16 +44,22 @@ const App = () => {
             setNewNumber('');
           })
           .catch(error => {
-            setNotificationMessage(`${newName} was removed from the phonebook`);
-            setNotificationType('error');
-            setTimeout(() => setNotificationMessage(null), 5000);
+
+            if(error.response.data.error.includes('Validation failed')) {
+              setNotificationMessage(`Please ensure that the name and number are formatted correctly!`);
+              setNotificationType('error');
+              setTimeout(() => setNotificationMessage(null), 5000);
+            } else {
+              setNotificationMessage(`${newName} was removed from the phonebook`);
+              setNotificationType('error');
+              setTimeout(() => setNotificationMessage(null), 5000);
+            }
   
             phonebookService
               .getAll()
               .then(initialEntries => {
                 setPersons(initialEntries);
             })
-            
           })
       }
     } else {
@@ -74,6 +80,11 @@ const App = () => {
 
           setNewName('');
           setNewNumber('');
+        })
+        .catch(error => {
+          setNotificationMessage(`Please ensure that the name and number are formatted correctly!`);
+          setNotificationType('error');
+          setTimeout(() => setNotificationMessage(null), 5000);
         })
     }
   }
